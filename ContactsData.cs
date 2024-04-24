@@ -1,18 +1,39 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Net;
-using System.Security.Policy;
-using ContactsDataAccessLayer;
-namespace ContactsDataAccessLayer
+
+namespace DataAccessLayer
 {
    public class clsContactsData
    {
+      public static bool DeleteContactByCountryID(int CountryID)
+      {
+         int NbrRowsAffected = 0;
+         SqlConnection connection = new SqlConnection(DataAccessSettings.ConnectionStr);
+         string query = @"Delete from Contacts where CountryID = @CountryID;";
+         SqlCommand command = new SqlCommand(query, connection);
+         command.Parameters.AddWithValue("@CountryID", CountryID);
+
+         try
+         {
+            connection.Open();
+            NbrRowsAffected = command.ExecuteNonQuery();
+         }
+         catch (Exception ex)
+         {
+            Console.WriteLine(" error " + ex.Message);
+         }
+         finally
+         {
+            connection.Close();
+         }
+         return (NbrRowsAffected > 0);
+      }
       public static bool isContactExist(int Id)
       {
          bool IsFound = false;
 
-         SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionStr);
+         SqlConnection connection = new SqlConnection(DataAccessSettings.ConnectionStr);
 
          string query = "SELECT found = 1 FROM Contacts WHERE ContactID = @ContactID";
 
@@ -39,7 +60,7 @@ namespace ContactsDataAccessLayer
       public static DataTable GetAllContactsInfo()
       {
          DataTable dt = new DataTable();
-         SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionStr);
+         SqlConnection connection = new SqlConnection(DataAccessSettings.ConnectionStr);
 
          string query = "SELECT * FROM Contacts ";
 
@@ -71,7 +92,7 @@ namespace ContactsDataAccessLayer
       public static bool DeleteContact(int ContactID)
       {
          int NbrRowsAffected = 0;
-         SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionStr);
+         SqlConnection connection = new SqlConnection(DataAccessSettings.ConnectionStr);
          string query = @"Delete from Contacts where ContactID = @contactID;";
          SqlCommand command = new SqlCommand(query, connection);
          command.Parameters.AddWithValue("@ContactID", ContactID);
@@ -94,7 +115,7 @@ namespace ContactsDataAccessLayer
       public static bool UpdateContact(int ContactID, string FirstName, string LastName, string Email, string Phone, string Address, DateTime DateOfBirth, int CountryID, string ImagePath)
       {
          int NbrRowsAffected = 0;
-         SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionStr);
+         SqlConnection connection = new SqlConnection(DataAccessSettings.ConnectionStr);
          string query = @"update Contacts  
                  set FirstName = @FirstName,LastName =  @LastName, Email = @Email,
                      Phone= @Phone, Address= @Address, DateOfBirth = @DateOfBirth, CountryID= @CountryID , ImagePath = @ImagePath
@@ -129,19 +150,19 @@ namespace ContactsDataAccessLayer
          {
             connection.Close();
          }
-         return (NbrRowsAffected  > 0);
+         return (NbrRowsAffected > 0);
 
       }
-      public static int AddContact( string FirstName, string LastName, string Email, string Phone, string Address, DateTime DateOfBirth, int CountryID, string ImagePath)
+      public static int AddContact(string FirstName, string LastName, string Email, string Phone, string Address, DateTime DateOfBirth, int CountryID, string ImagePath)
       {
          int ContactID = -1;
 
-         SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionStr);
+         SqlConnection connection = new SqlConnection(DataAccessSettings.ConnectionStr);
 
          string query = @"INSERT INTO Contacts (FirstName, LastName, Email, Phone, Address,DateOfBirth, CountryID,ImagePath) 
                   VALUES (@FirstName, @LastName, @Email, @Phone, @Address,@DateOfBirth, @CountryID,@ImagePath);
-                  select SCOPE_IDENTITY();";       
-         
+                  select SCOPE_IDENTITY();";
+
          SqlCommand command = new SqlCommand(query, connection);
          command.Parameters.AddWithValue("@FirstName", FirstName);
          command.Parameters.AddWithValue("@LastName", LastName);
@@ -185,7 +206,7 @@ namespace ContactsDataAccessLayer
       {
          bool isFound = false;
 
-         SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionStr);
+         SqlConnection connection = new SqlConnection(DataAccessSettings.ConnectionStr);
 
          string query = "SELECT * FROM Contacts WHERE ContactID = @ContactID";
 
@@ -243,6 +264,7 @@ namespace ContactsDataAccessLayer
 
          return isFound;
       }
-   
+
    }
 }
+
