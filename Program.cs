@@ -1,11 +1,24 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Diagnostics.Contracts;
-using ContactsBusinessLayer;
+using BusinessLayer;
 namespace ContactsPresentationLayer
 {
    internal class Program
-   {  
+   {
+      static void testDeleteContactByCountryID(int Id)
+      {
+         if (clsContact.DeleteContactByCountryID(Id))
+         {
+            Console.WriteLine("Deleted success");
+         }
+         else
+         {
+            Console.WriteLine("Failed");
+         }
+      }
+
+      
       static void testFindContact(int id)
       {
          clsContact Contact = clsContact.Find(id);
@@ -109,6 +122,113 @@ namespace ContactsPresentationLayer
             Console.WriteLine("not exist");
          }
       }
+      
+      static void testFindCountry(int ID)
+      {
+         clsCountry country = clsCountry.Find(ID);
+         if (country != null) 
+         {
+            Console.WriteLine("Id : " + country.CountryId);
+            Console.WriteLine("Name : " + country.CountryName);
+            Console.WriteLine("Code : " + country.Code);
+            Console.WriteLine("Phone Code : " + country.PhoneCode);
+         }
+         else
+         {
+            Console.WriteLine("not found");
+         }
+      }
+      static void testIsCountryExistName(string name)
+      {
+         if (clsCountry.IsCountryExistByName(name))
+         {
+            Console.WriteLine("Yes Exist");
+         }
+         else
+         {
+            Console.WriteLine("Not found");
+         }
+
+      }
+      static void testIsCountryExistByID(int id)
+      {
+         if (clsCountry.IsCountryExistByID(id))
+         {
+            Console.WriteLine("Yes Exist");
+         }
+         else
+         {
+            Console.WriteLine("Not found");
+         }
+
+      }
+
+      static void testUpdateCoutry(int Id)
+      {
+         clsCountry country = clsCountry.Find(Id);
+         if (country != null)
+         {
+            country.CountryName = " World";
+            country.Code = "ma";
+            if (country.Save())
+            {
+               Console.WriteLine("updated success");
+            }
+            else
+            {
+               Console.WriteLine("Failed");
+            }
+
+         }
+      }
+      static void testAddCoutry()
+      {
+         clsCountry country = new clsCountry();
+
+         country.CountryName = "Assekour World";
+         country.Code = "";
+         country.PhoneCode = "212";
+         if (country.Save())
+         {
+            Console.WriteLine("added success");
+         }
+         else
+         {
+            Console.WriteLine("Failed");
+         }
+
+
+      }
+      static void testDeleteCoutry(int id)
+      {
+         if (clsCountry.IsCountryExistByID(id))
+         {
+            if (clsCountry.DeleteCountry(id))
+            {
+               Console.WriteLine("dleted success");
+            }
+            else
+            {
+               Console.WriteLine("Failed");
+            }
+
+         }
+         else
+         {
+            Console.WriteLine("not found");
+         }
+
+
+      }
+      
+      static void testGetAllCountriesInfo()
+      {
+         DataTable dt =  clsCountry.GetAllCountriesInfo();
+         foreach (DataRow row in dt.Rows)
+         {
+            Console.WriteLine(row["CountryID"]);
+         }
+      }
       static void Main(string[] args)
       {
 
@@ -116,8 +236,19 @@ namespace ContactsPresentationLayer
          //testAddNewContact();
          //testUpdateContact(135);
          //testListAllContacts();
-         testDeleteContact(7);
+         //testDeleteContact(7);
          //testIsContactExist(144);
+
+         //testFindCountry(10);
+         //testIsCountryExist("United tates");
+         //testUpdateCoutry(11);
+         //testAddCoutry();
+         //testDeleteCoutry("Assekour World");
+         //testIsCountryExistByID(2);
+         //testGetAllCountriesInfo();
+         //testDeleteContactByCountryID(2);
+         //testDeleteCoutry(10);
+         
          Console.ReadKey();
       }
    }
