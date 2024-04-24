@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Data;
-using System.Diagnostics.Contracts;
-using ContactsDataAccessLayer;
+using DataAccessLayer;
 
-namespace ContactsBusinessLayer
+namespace BusinessLayer
 {
    public class clsContact
    {
@@ -70,7 +69,11 @@ namespace ContactsBusinessLayer
       {
          return clsContactsData.DeleteContact(id);
       }
-      
+      public static bool DeleteContactByCountryID(int id)
+      {
+         return clsContactsData.DeleteContactByCountryID(id);
+      }
+
       public static bool isContactExist(int id)
       {
          return clsContactsData.isContactExist(id);
